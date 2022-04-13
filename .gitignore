@@ -1,0 +1,7 @@
+/.idea/*
+*.csv
+*.pkl
+*.json
+*.h5
+*.log
+*.model

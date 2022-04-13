@@ -1,0 +1,11 @@
+dataset_ids:
+  - "meetup_sg"
+
+raw_data_dir: "C:\\dataset\\meetup"
+dataset_dir: ".\\data\\dataset"
+transform_dir: ".\\data\\transform"
+result_dir: ".\\data\\result"
+
+
+
+

@@ -7,13 +7,11 @@ from fuxictr.features import FeatureEncoder
 
 
 class DatasetBuilder(object):
-    def __init__(self, data_dir: str, save_dir: str, feature_cols=None,label_col=None,group_col=None, sequence_col=None,**kwargs):
+    def __init__(self, data_dir: str, save_dir: str, feature_cols=None, spec_cols=None,**kwargs):
         self.save_dir = save_dir
         self.data_dir = data_dir
         self.feature_encoder = FeatureEncoder(feature_cols=feature_cols,
-                                              label_col=label_col,
-                                              group_col=group_col,
-                                              sequence_col=sequence_col,
+                                              spec_cols=spec_cols,
                                               data_root=save_dir)
 
     def build_data(self):

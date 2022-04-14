@@ -10,7 +10,7 @@ tqdm.pandas()
 
 from ebsnrec.generator_builder import GeneratorBuilder
 from ebsnrec.model_factory import ModelFactory
-from ebsnrec.util import check_and_mkdir, set_log
+from ebsnrec.util import check_and_mkdir, set_log, parse_spec_cols
 
 
 def evaluation_once(common_config: dict, creator_config: dict, feature_config=None, model_config: dict = None,
@@ -32,6 +32,8 @@ def evaluation_once(common_config: dict, creator_config: dict, feature_config=No
     for dir_name in [data_root_dir, dataset_dir, processed_data_dir, model_dir, log_data_dir]:
         check_and_mkdir(dir_name)
 
+    parse_spec_cols(FEATURE_CONFIG["spec_cols"])
+
     set_log(**log_config, log_data_dir=log_data_dir)
 
     # create dataset from raw_dataset
@@ -47,7 +49,7 @@ def evaluation_once(common_config: dict, creator_config: dict, feature_config=No
 
     # create train and eval generator
 
-    generator_builder = GeneratorBuilder(data_dir=processed_data_dir, **evaluation_config)
+    generator_builder = GeneratorBuilder(data_dir=processed_data_dir, spec_cols=feature_config["spec_cols"], **evaluation_config)
     train_gen = generator_builder.get_generator(stage="train")
     valid_gen = generator_builder.get_generator(stage="valid")
 
@@ -55,7 +57,7 @@ def evaluation_once(common_config: dict, creator_config: dict, feature_config=No
     model_config.update(evaluation_config)
     model_config["verbose"] = common_config["verbose"]
 
-    model_factory = ModelFactory(data_dir=processed_data_dir,model_root=model_dir,**model_config)
+    model_factory = ModelFactory(data_dir=processed_data_dir,model_root=model_dir,spec_cols=feature_config["spec_cols"], **model_config)
     model = model_factory.get_model()
     model.fit_generator(train_gen,
                         validation_data=valid_gen,
@@ -84,9 +86,12 @@ if __name__ == '__main__':
     }
 
     FEATURE_CONFIG = {
-        "label_col": {'name': 'label', 'dtype': float},
-        "group_col": {'name': 'group_idx', 'dtype': float},
-        "sequence_col": {'name': 'sequence_idx', 'dtype': float},
+        "spec_cols":{
+            "label_col": {'name': 'label', 'dtype': float},
+            "group_col": {'name': 'group_idx', 'dtype': float},
+            # "sequence_col": {'name': 'sequence_idx', 'dtype': float},
+        },
+
         "feature_cols": [
             {'name': ["event_id", "user_id", "event_group_category", "user_join_event_group"], 'active': True,
              'dtype': 'str', 'type': 'categorical'},

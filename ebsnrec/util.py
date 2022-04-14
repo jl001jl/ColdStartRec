@@ -19,3 +19,13 @@ def set_log(level=logging.INFO, format='%(asctime)s %(levelname)s %(message)s', 
         logging.basicConfig(level=level,
                             format=format,
                             handlers=[logging.StreamHandler()])
+
+
+def parse_spec_cols(spec_cols):
+    idx = 0
+    for k in ["label_col", "group_col", "sequence_col"]:
+        if k in spec_cols:
+            spec_cols[k]["idx"] = idx
+            idx += 1
+    if idx != len(spec_cols):
+        raise RuntimeError

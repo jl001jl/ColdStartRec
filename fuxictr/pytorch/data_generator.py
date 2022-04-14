@@ -23,12 +23,13 @@ from itertools import chain
 import torch
 
 class Dataset(data.Dataset):
-    def __init__(self, darray):
+    def __init__(self, darray,spec_cols):
         self.darray = darray
+        self.spec_cols = spec_cols
         
     def __getitem__(self, index):
-        X = self.darray[index, 0:-3]
-        y = self.darray[index, -3:]
+        X = self.darray[index, :-len(self.spec_cols)]
+        y = self.darray[index, -len(self.spec_cols):]
         return X, y
     
     def __len__(self):
@@ -36,17 +37,19 @@ class Dataset(data.Dataset):
 
 
 class DataGenerator(data.DataLoader):
-    def __init__(self, data_path, batch_size=32, shuffle=False, num_workers=1, **kwargs):
+    def __init__(self, data_path, batch_size=32, shuffle=False, num_workers=1,spec_cols=None, **kwargs):
         if type(data_path) == list:
             data_path = data_path[0]
         data_array = load_hdf5(data_path)
-        self.dataset = Dataset(data_array)
+        self.dataset = Dataset(data_array,spec_cols)
+        self.spec_cols = spec_cols
+        self.label_idx = -(len(spec_cols) - spec_cols["label_col"]["idx"])
         super(DataGenerator, self).__init__(dataset=self.dataset, batch_size=batch_size,
                                             shuffle=shuffle, num_workers=num_workers)
         self.num_blocks = 1
         self.num_batches = int(np.ceil(len(self.dataset) * 1.0 / self.batch_size))
         self.num_samples = len(data_array)
-        self.num_positives = data_array[:, -1].sum()
+        self.num_positives = data_array[:, self.label_idx].sum()
         self.num_negatives = self.num_samples - self.num_positives
 
     def __len__(self):

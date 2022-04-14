@@ -94,9 +94,7 @@ class FeatureMap(object):
 class FeatureEncoder(object):
     def __init__(self, 
                  feature_cols=[], 
-                 label_col={},
-                 group_col={},
-                 sequence_col={},
+                 spec_cols =None,
                  data_root="../data/",
                  **kwargs):
         logging.info("Set up feature encoder...")
@@ -104,9 +102,7 @@ class FeatureEncoder(object):
         self.pickle_file = os.path.join(self.data_dir, "feature_encoder.pkl")
         self.json_file = os.path.join(self.data_dir, "feature_map.json")
         self.feature_cols = self._complete_feature_cols(feature_cols)
-        self.label_col = label_col
-        self.group_col = group_col
-        self.sequence_col = sequence_col
+        self.spec_cols = sorted(list(spec_cols.values()), key=lambda x:x["idx"])
         self.feature_map = FeatureMap(self.data_dir)
         self.encoders = dict()
 
@@ -125,7 +121,7 @@ class FeatureEncoder(object):
 
     def read_csv(self, data_path):
         logging.info("Reading file: " + data_path)
-        all_cols = self.feature_cols + [self.label_col, self.group_col,self.sequence_col]
+        all_cols = self.feature_cols + self.spec_cols
         dtype_dict = dict((x["name"], eval(x["dtype"]) if isinstance(x["dtype"], str) else x["dtype"]) 
                           for x in all_cols)
         ddf = pd.read_csv(data_path, dtype=dtype_dict, memory_map=True)
@@ -133,7 +129,7 @@ class FeatureEncoder(object):
 
     def preprocess(self, ddf, fill_na=True):
         logging.info("Preprocess feature columns...")
-        all_cols = [self.label_col,self.group_col,self.sequence_col] + self.feature_cols[::-1]
+        all_cols = self.spec_cols + self.feature_cols[::-1]
         for col in all_cols:
             name = col["name"]
             if fill_na and name in ddf.columns and ddf[name].isnull().values.any():
@@ -141,7 +137,7 @@ class FeatureEncoder(object):
             if "preprocess" in col and col["preprocess"] != "":
                 preprocess_fn = getattr(self, col["preprocess"])
                 ddf[name] = preprocess_fn(ddf, name)
-        active_cols = [self.label_col["name"], self.group_col["name"],self.sequence_col["name"]] + [col["name"] for col in self.feature_cols if col["active"]]
+        active_cols = [x["name"] for x in self.spec_cols] + [col["name"] for col in self.feature_cols if col["active"]]
         ddf = ddf.loc[:, active_cols]
         return ddf
 
@@ -295,7 +291,7 @@ class FeatureEncoder(object):
             elif feature_type == "sequence":
                 data_arrays.append(self.encoders.get(feature + "_tokenizer") \
                                                 .encode_sequence(ddf.loc[:, feature].values))
-        for label_name in [self.label_col["name"], self.group_col["name"],self.sequence_col["name"]]:
+        for label_name in [x["name"] for x in self.spec_cols]:
 
             if ddf[label_name].dtype != np.float64:
                 ddf.loc[:, label_name] = ddf.loc[:, label_name].apply(lambda x: float(x))

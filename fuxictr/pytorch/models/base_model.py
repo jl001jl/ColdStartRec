@@ -41,7 +41,8 @@ class BaseModel(nn.Module):
                  embedding_regularizer=None, 
                  net_regularizer=None, 
                  reduce_lr_on_plateau=True, 
-                 embedding_initializer="torch.nn.init.normal_(std=1e-4)", 
+                 embedding_initializer="torch.nn.init.normal_(std=1e-4)",
+                 spec_cols = None,
                  **kwargs):
         super(BaseModel, self).__init__()
         self.device = get_device(gpu)
@@ -60,6 +61,8 @@ class BaseModel(nn.Module):
         self.checkpoint = os.path.abspath(os.path.join(self.model_dir, self.model_id + ".model"))
         self._validation_metrics = kwargs["metrics"]
         self._verbose = kwargs["verbose"]
+        self._spec_cols = spec_cols
+        self._label_idx = spec_cols["label_col"]['idx'] -len(spec_cols)
 
     def compile(self, optimizer, loss, lr):
         self.optimizer = get_optimizer(optimizer, self.parameters(), lr)
@@ -118,7 +121,7 @@ class BaseModel(nn.Module):
         
     def inputs_to_device(self, inputs):
         X, y = inputs
-        y = y[:,-3]
+        y = y[:,self._label_idx]
         X = X.to(self.device)
         y = y.float().view(-1, 1).to(self.device)
         self.batch_size = y.size(0)
@@ -231,12 +234,14 @@ class BaseModel(nn.Module):
             for batch_data in data_generator:
                 return_dict = self.forward(batch_data)
                 y_pred.extend(return_dict["y_pred"].data.cpu().numpy().reshape(-1))
-                y_true.extend(batch_data[1][:,0].data.cpu().numpy().reshape(-1))
-                group.extend(batch_data[1][:,1].data.cpu().numpy().reshape(-1))
-                sequence.extend(batch_data[1][:,2].data.cpu().numpy().reshape(-1))
+                y_true.extend(batch_data[1][:,self._spec_cols["label_col"]["idx"]].data.cpu().numpy().reshape(-1))
+                if "group_col" in self._spec_cols:
+                    group.extend(batch_data[1][:,self._spec_cols["group_col"]["idx"]].data.cpu().numpy().reshape(-1))
+                if "sequence_col" in self._spec_cols:
+                    sequence.extend(batch_data[1][:,self._spec_cols["sequence_col"]["idx"]].data.cpu().numpy().reshape(-1))
             y_pred = np.array(y_pred, np.float64)
             y_true = np.array(y_true, np.float64)
-            val_logs = self.evaluate_metrics(y_true, y_pred, self._validation_metrics,group_index=group)
+            val_logs = self.evaluate_metrics(y_true, y_pred, self._validation_metrics,group_index=group,sequence_index=sequence)
             return val_logs
 
     def evaluate_metrics(self, y_true, y_pred, metrics,**kwargs):

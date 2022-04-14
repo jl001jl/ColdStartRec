@@ -8,7 +8,7 @@ from fuxictr.pytorch.models import DeepFM, DNN
 
 
 class ModelFactory(object):
-    def __init__(self,data_dir,model_root, model_id, metrics,verbose,optimizer,loss,learning_rate,**kwargs):
+    def __init__(self,data_dir,model_root, model_id, metrics,verbose,optimizer,loss,learning_rate,spec_cols,**kwargs):
         self.feature_map = FeatureMap.load_from_disk(os.path.join(data_dir, "feature_map.json"))
         self.model_id = model_id
         self.model_root = model_root
@@ -17,6 +17,7 @@ class ModelFactory(object):
         self.optimizer = optimizer
         self.loss = loss
         self.learning_rate = learning_rate
+        self.spec_cols = spec_cols
 
 
     def get_model(self):
@@ -31,4 +32,5 @@ class ModelFactory(object):
                            verbose=self.verbose,
                            optimizer=self.optimizer,
                            loss=self.loss,
-                           learning_rate=self.learning_rate)
+                           learning_rate=self.learning_rate,
+                           spec_cols = self.spec_cols)

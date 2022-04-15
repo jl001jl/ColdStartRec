@@ -111,7 +111,7 @@ if __name__ == '__main__':
     }
 
     MODEL_CONFIG = {
-        "model_id":"DNN"
+        "model_id":"WideDeep"
     }
 
     LOG_CONFIG = {

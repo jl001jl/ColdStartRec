@@ -1,10 +1,8 @@
 import os.path
 
+from ebsnrec.models import DIERM
 from fuxictr.features import FeatureMap
-from fuxictr.pytorch.models import DeepFM, DNN
-
-
-
+from fuxictr.pytorch.models import DeepFM, DNN, WideDeep, DIN
 
 
 class ModelFactory(object):
@@ -21,11 +19,24 @@ class ModelFactory(object):
 
 
     def get_model(self):
-        if self.model_id == "DNN":
+        if self.model_id == "WideDeep":
+            model_class = WideDeep
+        elif self.model_id == "DeepFM":
+            model_class = DeepFM
+        elif self.model_id == "DIN":
+            model_class = DIN
+        elif self.model_id == "DIERM":
+            model_class = DIERM
+        elif self.model_id == "MostPopular":
+            model_class = DNN
+        elif self.model_id == "ContextRec":
+            model_class = DNN
+        elif self.model_id == "EventRec":
+            model_class = DNN
+        elif self.model_id == "JointRec":
             model_class = DNN
         else:
-            model_class = DeepFM
-
+            model_class = DNN
         return model_class(feature_map=self.feature_map,
                            model_root=self.model_root,
                            metrics=self.metrics,

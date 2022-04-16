@@ -1,0 +1,3 @@
+data_root_dir: ".\\data"
+raw_dataset_dir: "C:\\dataset\\meetup"
+verbose: 1

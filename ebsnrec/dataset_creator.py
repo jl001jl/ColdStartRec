@@ -14,6 +14,8 @@ from ebsnrec.data.utils import convert_df_cols_to_dtype,clean_text
 from ebsnrec.data.mining_features import *
 from sklearn.feature_extraction.text import CountVectorizer,TfidfVectorizer
 
+from ebsnrec.util import create_signature, save_signature, get_signature
+
 
 class DatasetCreator(object):
     def __init__(self,
@@ -66,6 +68,11 @@ class DatasetCreator(object):
         self.num_events = None
         self.num_users = None
         self.user2events = None
+        self._signature = create_signature(tz_offset,begin_time,end_time,event_min_attend,event_max_attend,
+                                           user_min_attend,train_pr,val_pr,test_pr,max_sample_per_event,
+                                           min_neg_per_pos,max_neg_per_pos,cold_start_reserve_length,
+                                           eval_max_neg_per_pos)
+
 
     def create_dataset(self):
         if self.check_can_skip():
@@ -116,7 +123,9 @@ class DatasetCreator(object):
         sample_df[sample_df["mask"] == 0].to_csv(os.path.join(self.save_dir, "train.csv"))
         sample_df[sample_df["mask"] == 1].to_csv(os.path.join(self.save_dir, "valid.csv"))
         sample_df[sample_df["mask"] == 2].to_csv(os.path.join(self.save_dir, "test.csv"))
-        pass
+
+        save_signature(self._signature, self.save_dir)
+
 
     def parse_features(self):
         pass
@@ -320,8 +329,8 @@ class DatasetCreator(object):
         return user_df
 
     def check_can_skip(self):
-        files = [os.path.join(self.save_dir, x) for x in ["test.csv","train.csv","valid.csv"]]
-        for file in files:
-            if not os.path.exists(file):
-                return False
-        return True
+        last_signature = get_signature(self.save_dir)
+        if last_signature is not None and last_signature == self._signature:
+            return True
+        else:
+            return False

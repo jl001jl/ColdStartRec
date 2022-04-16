@@ -2,27 +2,29 @@ import gc
 import logging
 import os
 
+from ebsnrec.util import get_signature, create_signature, save_signature
 from fuxictr.datasets import save_hdf5
 from fuxictr.features import FeatureEncoder
 
 
 class DatasetBuilder(object):
-    def __init__(self, data_dir: str, save_dir: str, feature_cols=None, spec_cols=None,**kwargs):
+    def __init__(self, data_dir: str, save_dir: str, feature_cols=None, spec_cols=None, **kwargs):
         self.save_dir = save_dir
         self.data_dir = data_dir
         self.feature_encoder = FeatureEncoder(feature_cols=feature_cols,
                                               spec_cols=spec_cols,
                                               data_root=save_dir)
+        self._signature = create_signature(get_signature(data_dir), feature_cols, spec_cols)
 
     def build_data(self):
         if self.check_can_skip():
             logging.warning(f"skip build data {self.save_dir}")
             return
         self._build_data()
+        save_signature(self._signature,self.save_dir)
 
     def get_feature_map(self):
         return self.feature_encoder.feature_map
-
 
     def _build_data(self):
         feature_encoder = self.feature_encoder
@@ -56,8 +58,8 @@ class DatasetBuilder(object):
         save_hdf5(test_array, os.path.join(feature_encoder.data_dir, 'test.h5'))
 
     def check_can_skip(self):
-        files = [os.path.join(self.save_dir, x) for x in ["test.h5", "train.h5", "valid.h5"]]
-        for file in files:
-            if not os.path.exists(file):
-                return False
-        return True
+        last_signature = get_signature(self.save_dir)
+        if last_signature is not None and last_signature == self._signature:
+            return True
+        else:
+            return False

@@ -62,5 +62,5 @@ def mrr(y_true, y_pred, group_index):
 
 
 def group_mrr(y_true, y_pred):
-    rank = len(y_true)-(y_true[y_pred.argsort()].argmax())+1
+    rank = len(y_true)-(y_true[y_pred.argsort()].argmax())
     return 1/rank

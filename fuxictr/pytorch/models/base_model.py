@@ -17,6 +17,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 # =========================================================================
+import math
 
 import torch.nn as nn
 import numpy as np
@@ -138,7 +139,7 @@ class BaseModel(nn.Module):
             self.checkpoint_and_earlystop(epoch, val_logs)
             logging.info("--- {}/{} batches finished ---".format(batch + 1, self._batches_per_epoch))
 
-    def lr_decay(self, factor=0.1, min_lr=1e-6):
+    def lr_decay(self, factor=1/math.sqrt(10), min_lr=1e-6):
         for param_group in self.optimizer.param_groups:
             reduced_lr = max(param_group["lr"] * factor, min_lr)
             param_group["lr"] = reduced_lr

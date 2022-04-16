@@ -15,15 +15,16 @@ class GeneratorBuilder(object):
         self.spec_cols = spec_cols
 
     def get_generator(self, stage="train"):
-        batch_size = self.batch_size
+        batch_size = self.test_batch_size
         shuffle = True
         if stage=="train":
             blocks = glob.glob(self.train_data)
+            batch_size = self.batch_size
         elif stage == "valid":
             blocks = glob.glob(self.valid_data)
         else:
             blocks = glob.glob(self.test_data)
-            batch_size = self.test_batch_size
+
             shuffle = False
         gen = DataGenerator(blocks, batch_size=batch_size, shuffle=shuffle, spec_cols=self.spec_cols)
         logging.info("samples: total/{:d}, pos/{:.0f}, neg/{:.0f}, ratio/{:.2f}%, blocks/{:.0f}" \

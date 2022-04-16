@@ -1,0 +1,46 @@
+base:
+  spec_cols:
+    label_col:
+      name: 'label'
+      dtype: float
+    group_col:
+      name: 'group_idx'
+      dtype: float
+
+  feature_cols:
+    - name:
+        - event_id
+        - user_id
+        - event_group_category
+        - event_group_id
+#        - user_join_event_group
+      active: true
+      dtype: str
+      type: categorical
+
+
+
+    - name: user_topic_ids
+      active: true
+      dtype: str
+      type: sequence
+      splitter: ^
+      max_len: 5
+
+    - name: event_topic_ids
+      active: true
+      dtype: str
+      type: sequence
+      splitter: ^
+      max_len: 5
+      share_embedding: user_topic_ids
+
+#    - name: user_has_attend_event
+#      active: true
+#      dtype: str
+#      type: sequence
+#      splitter: ^
+#      max_len: 5
+#      share_embedding: user_id
+
+

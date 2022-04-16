@@ -1,4 +1,4 @@
-from ebsnrec.data.dataset_creator import DatasetCreator
+from ebsnrec.dataset_creator import DatasetCreator
 from tqdm.auto import tqdm
 import logging
 tqdm.pandas()

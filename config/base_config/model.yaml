@@ -1,0 +1,11 @@
+base:
+  hidden_units:
+    - 128
+    - 128
+  hidden_activations: ReLU
+
+WideDeep:
+  model_id: WideDeep
+
+DNN:
+  model_id: DNN

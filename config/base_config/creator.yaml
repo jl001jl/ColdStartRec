@@ -1,0 +1,30 @@
+base:
+  begin_time: 2017-11-01
+  end_time: 2018-01-01
+  event_min_attend: 5
+  event_max_attend: 50
+  user_min_attend: 5
+  train_pr: 0.9
+  val_pr: 0.05
+  test_pr: 0.05
+  max_sample_per_event: 10
+  min_neg_per_pos: 5
+  max_neg_per_pos: 10
+  cold_start_reserve_length: 5
+  eval_max_neg_per_pos: 20
+  num_workers: 6
+
+meetup_sg:
+  dataset_id: "meetup_sg"
+  dataset_file_name: "meetup_sg.db"
+  tz_offset: 8
+
+meetup_ca:
+  dataset_id: "meetup_ca"
+  dataset_file_name: "meetup_ca.db"
+  tz_offset: -5
+
+meetup_ny:
+  dataset_id: "meetup_ny"
+  dataset_file_name: "meetup_ny.db"
+  tz_offset: -8

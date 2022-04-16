@@ -9,3 +9,6 @@ WideDeep:
 
 DNN:
   model_id: DNN
+
+LR:
+  model_id: LR

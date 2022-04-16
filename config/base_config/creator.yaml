@@ -1,9 +1,9 @@
 base:
-  begin_time: 2017-11-01
-  end_time: 2018-01-01
+  begin_time: '2017-10-01'
+  end_time: '2018-01-01'
   event_min_attend: 5
   event_max_attend: 50
-  user_min_attend: 5
+  user_min_attend: 1
   train_pr: 0.9
   val_pr: 0.05
   test_pr: 0.05

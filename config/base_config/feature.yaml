@@ -9,31 +9,46 @@ base:
 
   feature_cols:
     - name:
-        - event_id
-        - user_id
-        - event_group_category
-        - event_group_id
-#        - user_join_event_group
+      - context_social_similarity
+      - context_time_similarity
+      - context_content_similarity
+      - context_location_similarity
+      - user_event_topic_overlap
+      na_value: 0.5
       active: true
-      dtype: str
-      type: categorical
+      dtype: float
+      type: numeric
 
 
 
-    - name: user_topic_ids
-      active: true
-      dtype: str
-      type: sequence
-      splitter: ^
-      max_len: 5
 
-    - name: event_topic_ids
-      active: true
-      dtype: str
-      type: sequence
-      splitter: ^
-      max_len: 5
-      share_embedding: user_topic_ids
+#
+#    - name:
+#        - event_id
+#        - user_id
+#        - event_group_category
+#        - event_group_id
+##        - user_join_event_group
+#      active: true
+#      dtype: str
+#      type: categorical
+
+
+
+#    - name: user_topic_ids
+#      active: true
+#      dtype: str
+#      type: sequence
+#      splitter: ^
+#      max_len: 5
+#
+#    - name: event_topic_ids
+#      active: true
+#      dtype: str
+#      type: sequence
+#      splitter: ^
+#      max_len: 5
+#      share_embedding: user_topic_ids
 
 #    - name: user_has_attend_event
 #      active: true

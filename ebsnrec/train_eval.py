@@ -46,25 +46,29 @@ def evaluation_once(common_config: dict, creator_config: dict, feature_config=No
     data_builder = DatasetBuilder(data_dir=dataset_dir, save_dir=processed_data_dir, **feature_config)
     data_builder.build_data()
 
-    # create train and eval generator
-
-    generator_builder = GeneratorBuilder(data_dir=processed_data_dir, spec_cols=feature_config["spec_cols"], **evaluation_config)
-    train_gen = generator_builder.get_generator(stage="train")
-    valid_gen = generator_builder.get_generator(stage="valid")
-
     # get model
     model_config.update(evaluation_config)
     model_config["verbose"] = common_config["verbose"]
-
-    model_factory = ModelFactory(data_dir=processed_data_dir,model_root=model_dir,spec_cols=feature_config["spec_cols"], **model_config)
+    model_factory = ModelFactory(data_dir=processed_data_dir, model_root=model_dir,
+                                 spec_cols=feature_config["spec_cols"], **model_config)
     model = model_factory.get_model()
-    model.fit_generator(train_gen,
-                        validation_data=valid_gen,
-                        epochs=evaluation_config["epochs"],
-                        verbose=common_config["verbose"])
 
-    model.load_weights(model.checkpoint)
-    model.evaluate_generator(valid_gen)
+    # create train and eval generator
+    generator_builder = GeneratorBuilder(data_dir=processed_data_dir, spec_cols=feature_config["spec_cols"],
+                                         **evaluation_config)
+
+    need_training = evaluation_config["need_training"]
+
+    if need_training:
+        train_gen = generator_builder.get_generator(stage="train")
+        valid_gen = generator_builder.get_generator(stage="valid")
+        model.fit_generator(train_gen,
+                            validation_data=valid_gen,
+                            epochs=evaluation_config["epochs"],
+                            verbose=common_config["verbose"])
+
+        model.load_weights(model.checkpoint)
+
 
 
     logging.info('***** validation results *****')

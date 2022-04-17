@@ -2,7 +2,6 @@ from .base_model import BaseModel
 from .LR import LR
 from .FM import FM
 from .DNN import DNN
-from .WideDeep import WideDeep
 from .FwFM import FwFM
 from .PNN import PNN
 from .FNN import FNN
@@ -26,7 +25,6 @@ from .HOFM import HOFM
 from .FFM import FFM
 from .FFMv2 import FFMv2
 from .FmFM import FmFM
-from .DIN import DIN
 from .DeepIM import DeepIM
 from .FLEN import FLEN
 from .InterHAt import InterHAt

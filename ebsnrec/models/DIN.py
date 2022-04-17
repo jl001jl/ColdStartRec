@@ -1,25 +1,3 @@
-# =========================================================================
-# Copyright (C) 2021. Huawei Technologies Co., Ltd. All rights reserved.
-# 
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#     http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-# =========================================================================
-
-""" This model implements the paper "Zhou et al., Deep Interest Network for 
-    Click-Through Rate Prediction, KDD'2018".
-    [PDF] https://arxiv.org/pdf/1706.06978.pdf
-    [Code] https://github.com/zhougr1993/DeepInterestNetwork
-"""
-
 import torch
 from torch import nn
 import numpy as np
@@ -43,8 +21,8 @@ class DIN(BaseModel):
                  embedding_dim=10, 
                  net_dropout=0, 
                  batch_norm=False, 
-                 din_target_field=[("item_id", "cate_id")],
-                 din_sequence_field=[("click_history", "cate_history")],
+                 din_target_field=[("event_id", )],
+                 din_sequence_field=[("user_joined_events",)],
                  din_use_softmax=False,
                  embedding_regularizer=None, 
                  net_regularizer=None, 

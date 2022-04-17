@@ -182,10 +182,10 @@ class BaseModel(nn.Module):
         self._max_gradient_norm = max_gradient_norm
         self._best_metric = np.Inf if self._monitor_mode == "min" else -np.Inf
         self._stopping_steps = 0
+        self._stop_training = False
         self._total_batches = 0
         self._batches_per_epoch = len(data_generator)
         self._every_x_batches = int(np.ceil(self._every_x_epochs * self._batches_per_epoch))
-        self._stop_training = False
         self._verbose = verbose
 
 

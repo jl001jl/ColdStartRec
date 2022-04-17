@@ -1,5 +1,5 @@
 base:
-  begin_time: '2017-10-01'
+  begin_time: '2017-09-01'
   end_time: '2018-01-01'
   event_min_attend: 5
   event_max_attend: 50
@@ -7,7 +7,7 @@ base:
   train_pr: 0.9
   val_pr: 0.05
   test_pr: 0.05
-  max_sample_per_event: 10
+  max_sample_per_event: 50
   min_neg_per_pos: 5
   max_neg_per_pos: 10
   cold_start_reserve_length: 5

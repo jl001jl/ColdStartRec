@@ -4,13 +4,8 @@ base:
     - 128
   hidden_activations: ReLU
 
-
-#DNN:
-#  model_id: DNN
-#
-#LR:
-#  model_id: LR
-
+LR:
+  model_id: LR
 
 MostPopular:
   model_id: MostPopular
@@ -29,6 +24,11 @@ DeepFM:
 
 DIN:
   model_id: DIN
+#  din_target_field:
+#    - - event_id
+#
+#  din_sequence_field:
+#    - - user_joined_events
 
 DIERM:
   model_id: DIERM

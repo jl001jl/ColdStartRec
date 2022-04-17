@@ -7,55 +7,75 @@ base:
       name: 'group_idx'
       dtype: float
 
+MostPopular:
   feature_cols:
     - name:
-      - context_social_similarity
-      - context_time_similarity
-      - context_content_similarity
-      - context_location_similarity
-      - user_event_topic_overlap
-      na_value: 0.5
+        - num_users_has_attend
       active: true
       dtype: float
       type: numeric
 
+ContextRec:
+  feature_cols:
+    - name:
+        - context_social_similarity
+        - context_time_similarity
+        - context_content_similarity
+        - context_location_similarity
+        - num_users_has_attend
+      na_value: 0.5
+      active: true
+      dtype: float
+      type: numeric
+      preprocessing: StandardScale
 
 
+DIN:
+  feature_cols:
+    - name:
+        - context_social_similarity
+        - context_time_similarity
+        - context_content_similarity
+        - context_location_similarity
+        - num_users_has_attend
+      na_value: 0.5
+      active: true
+      dtype: float
+      type: numeric
+      preprocessing: StandardScale
 
-#
-#    - name:
-#        - event_id
-#        - user_id
+    - name:
+        - event_id
+        - user_id
 #        - event_group_category
 #        - event_group_id
-##        - user_join_event_group
-#      active: true
-#      dtype: str
-#      type: categorical
+#        - user_join_event_group
+      active: true
+      dtype: str
+      type: categorical
 
+    - name: user_joined_events
+      active: true
+      dtype: str
+      type: sequence
+      splitter: ^
+      max_len: 20
+      share_embedding: event_id
 
-
-#    - name: user_topic_ids
-#      active: true
-#      dtype: str
-#      type: sequence
-#      splitter: ^
-#      max_len: 5
-#
-#    - name: event_topic_ids
-#      active: true
-#      dtype: str
-#      type: sequence
-#      splitter: ^
-#      max_len: 5
-#      share_embedding: user_topic_ids
 
 #    - name: user_has_attend_event
 #      active: true
 #      dtype: str
 #      type: sequence
 #      splitter: ^
-#      max_len: 5
+#      max_len: 20
 #      share_embedding: user_id
 
-
+#    - name: user_group_ids
+#      active: true
+#      dtype: str
+#      type: sequence
+#      splitter: ^
+#      max_len: 10
+#      share_embedding: event_group_id
+#      encoder: MaskedAveragePooling

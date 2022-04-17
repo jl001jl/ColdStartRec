@@ -235,7 +235,7 @@ class FeatureEncoder(object):
                 self.feature_map.num_features += num_buckets
                 self.encoders[name + "_num_buckets"] = num_buckets
         elif feature_type == "sequence":
-            encoder = feature_column.get("encoder", "MaskedAveragePooling")
+            encoder = feature_column.get("encoder", None)
             splitter = feature_column.get("splitter", " ")
             na_value = feature_column.get("na_value", "")
             max_len = feature_column.get("max_len", 0)

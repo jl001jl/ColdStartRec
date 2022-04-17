@@ -44,6 +44,8 @@ class ConfigFactory(object):
 
     def __build_evaluation_config(self, config_dict, model="WideDeep", dataset="meetup_sg", **kwargs):
         config = self.__load_base_config(config_type="evaluation", key="base")
+        model_spec_config = self.__load_base_config(config_type="evaluation", key=model)
+        update_dict_by_dict_recursively(config, model_spec_config)
         config_dict["evaluation_config"] = config
 
     def __build_log_config(self, config_dict, model="WideDeep", dataset="meetup_sg", **kwargs):

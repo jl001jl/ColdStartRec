@@ -1,6 +1,6 @@
 base:
   batch_size: 5192
-  epochs: 3
+  epochs: 20
   metrics:
     - AUC
     - GAUC
@@ -11,4 +11,18 @@ base:
   gpu: 0
   patience: 4
   test_batch_size: 10240
+  need_training: true
+
+MostPopular:
+  need_training: false
+
+
+ContextRec:
+  learning_rate: 0.1
+
+DIN:
+  batch_size: 512
+  test_batch_size: 2048
+
+
 

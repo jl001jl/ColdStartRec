@@ -197,10 +197,10 @@ class BaseModel(nn.Module):
         for epoch in range(epochs):
             epoch_loss = self.train_one_epoch(data_generator, epoch)
             logging.info("Train loss: {:.6f}".format(epoch_loss))
+            logging.info("************ Epoch={} end ************".format(epoch + 1))
             if self._stop_training:
                 break
-            else:
-                logging.info("************ Epoch={} end ************".format(epoch + 1))
+        self._stop_training = True
         logging.info("Training finished.")
 
     def train_one_epoch(self, data_generator, epoch):
@@ -236,13 +236,16 @@ class BaseModel(nn.Module):
                 return_dict = self.forward(batch_data)
                 y_pred.extend(return_dict["y_pred"].data.cpu().numpy().reshape(-1))
                 y_true.extend(batch_data[1][:,self._spec_cols["label_col"]["idx"]].data.cpu().numpy().reshape(-1))
-                if "group_col" in self._spec_cols:
+                if self._stop_training and "group_col" in self._spec_cols :
                     group.extend(batch_data[1][:,self._spec_cols["group_col"]["idx"]].data.cpu().numpy().reshape(-1))
-                if "sequence_col" in self._spec_cols:
+                if self._stop_training and "sequence_col" in self._spec_cols:
                     sequence.extend(batch_data[1][:,self._spec_cols["sequence_col"]["idx"]].data.cpu().numpy().reshape(-1))
             y_pred = np.array(y_pred, np.float64)
             y_true = np.array(y_true, np.float64)
-            val_logs = self.evaluate_metrics(y_true, y_pred, self._validation_metrics,group_index=group,sequence_index=sequence)
+            if self._stop_training:
+                val_logs = self.evaluate_metrics(y_true, y_pred, self._validation_metrics,group_index=group,sequence_index=sequence)
+            else:
+                val_logs = self.evaluate_metrics(y_true, y_pred, ["AUC"])
             return val_logs
 
     def evaluate_metrics(self, y_true, y_pred, metrics,**kwargs):

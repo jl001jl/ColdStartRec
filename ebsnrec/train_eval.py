@@ -66,6 +66,7 @@ def evaluation_once(common_config: dict, creator_config: dict, feature_config=No
     model.load_weights(model.checkpoint)
     model.evaluate_generator(valid_gen)
 
+
     logging.info('***** validation results *****')
     test_gen = generator_builder.get_generator(stage="test")
     model.evaluate_generator(test_gen)

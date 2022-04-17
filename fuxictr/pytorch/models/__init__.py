@@ -3,7 +3,6 @@ from .LR import LR
 from .FM import FM
 from .DNN import DNN
 from .WideDeep import WideDeep
-from .DeepFM import DeepFM
 from .FwFM import FwFM
 from .PNN import PNN
 from .FNN import FNN

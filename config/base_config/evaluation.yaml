@@ -1,9 +1,10 @@
 base:
   batch_size: 5192
-  epochs: 10
+  epochs: 3
   metrics:
     - AUC
-#    - MRR
+    - GAUC
+    - MRR
   optimizer: adam
   loss: binary_crossentropy
   learning_rate: 0.001

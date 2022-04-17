@@ -4,11 +4,31 @@ base:
     - 128
   hidden_activations: ReLU
 
+
+#DNN:
+#  model_id: DNN
+#
+#LR:
+#  model_id: LR
+
+
+MostPopular:
+  model_id: MostPopular
+
+ContextRec:
+  model_id: ContextRec
+
+EventRec:
+  model_id: EventRec
+
 WideDeep:
   model_id: WideDeep
 
-DNN:
-  model_id: DNN
+DeepFM:
+  model_id: DeepFM
 
-LR:
-  model_id: LR
+DIN:
+  model_id: DIN
+
+DIERM:
+  model_id: DIERM

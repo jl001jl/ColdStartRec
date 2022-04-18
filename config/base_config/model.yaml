@@ -24,11 +24,6 @@ DeepFM:
 
 DIN:
   model_id: DIN
-#  din_target_field:
-#    - - event_id
-#
-#  din_sequence_field:
-#    - - user_joined_events
 
 DIERM:
   model_id: DIERM

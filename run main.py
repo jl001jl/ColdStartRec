@@ -3,5 +3,5 @@ from ebsnrec.train_eval import evaluation_once
 
 
 if __name__ == '__main__':
-    config = ConfigFactory("./config").get_config(dataset="meetup_sg",model="DIN")
+    config = ConfigFactory("./config").get_config(dataset="meetup_sg",model="ContextRec")
     evaluation_once(**config)

@@ -18,6 +18,7 @@
 from sklearn.metrics import roc_auc_score, log_loss, accuracy_score
 import numpy as np
 import logging
+from tqdm import tqdm
 
 
 def evaluate_metrics(y_true, y_pred, metrics, **kwargs):
@@ -48,7 +49,7 @@ def evaluate_metrics(y_true, y_pred, metrics, **kwargs):
 def gAUC(y_true, y_pred, group_index):
     unique_groups = set(group_index)
     res = 0.0
-    for unique_group in unique_groups:
+    for unique_group in tqdm(unique_groups):
         res += roc_auc_score(y_true[group_index == unique_group], y_pred[group_index == unique_group])
     return res/len(unique_groups)
 

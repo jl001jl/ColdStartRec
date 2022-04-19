@@ -22,7 +22,7 @@ ContextRec:
         - context_time_similarity
         - context_content_similarity
         - context_location_similarity
-        - num_users_has_attend
+#        - num_users_has_attend
       na_value: 0.5
       active: true
       dtype: float
@@ -37,7 +37,7 @@ DIN:
         - context_time_similarity
         - context_content_similarity
         - context_location_similarity
-        - num_users_has_attend
+#        - num_users_has_attend
       na_value: 0.5
       active: true
       dtype: float

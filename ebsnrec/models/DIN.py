@@ -14,7 +14,7 @@ class DIN(BaseModel):
                  dnn_hidden_units=[512, 128, 64],
                  dnn_activations="ReLU",
                  attention_hidden_units=[64],
-                 attention_hidden_activations="Dice",
+                 attention_hidden_activations="Relu",
                  attention_output_activation=None,
                  attention_dropout=0,
                  learning_rate=1e-3, 

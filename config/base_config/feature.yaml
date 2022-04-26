@@ -37,7 +37,7 @@ DIN:
         - context_time_similarity
         - context_content_similarity
         - context_location_similarity
-#        - num_users_has_attend
+        - num_users_has_attend
       na_value: 0.5
       active: true
       dtype: float
@@ -56,7 +56,7 @@ DIN:
       dtype: str
       type: sequence
       splitter: ^
-      max_len: 20
+      max_len: 5
       share_embedding: event_id
 
 
@@ -77,10 +77,10 @@ DIERM:
       preprocessing: StandardScale
 
     - name:
-        - event_id
+#        - event_id
         - user_id
-        - event_group_category
-        - event_group_id
+#        - event_group_category
+#        - event_group_id
       active: true
       dtype: str
       type: categorical
@@ -90,7 +90,7 @@ DIERM:
       dtype: str
       type: sequence
       splitter: ^
-      max_len: 20
+      max_len: 5
       share_embedding: user_id
 
 #    - name: user_group_ids
@@ -101,7 +101,16 @@ DIERM:
 #      max_len: 20
 #      share_embedding: event_group_id
 #      encoder: MaskedAveragePooling
-
+#
+#    - name: user_joined_events
+#      active: true
+#      dtype: str
+#      type: sequence
+#      splitter: ^
+#      max_len: 20
+#      share_embedding: event_id
+#      encoder: MaskedAveragePooling
+#
 #    - name: user_topic_ids
 #      active: true
 #      dtype: str

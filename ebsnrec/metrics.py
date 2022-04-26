@@ -21,6 +21,24 @@ import logging
 from tqdm import tqdm
 
 
+def ndcg(y_true, y_pred, group_index):
+    begin = 0
+    end = 0
+    count = 0
+    res = 0.0
+    while begin<len(group_index):
+        while end<len(group_index) and group_index[end]==group_index[begin]:
+            end+= 1
+        res += roc_auc_score(y_true[begin:end], y_pred[begin:end])
+        count += 1
+        begin = end
+    return res/count
+
+
+def recall(y_true, y_pred, group_index):
+    pass
+
+
 def evaluate_metrics(y_true, y_pred, metrics, **kwargs):
     result = dict()
     for metric in metrics:
@@ -37,9 +55,11 @@ def evaluate_metrics(y_true, y_pred, metrics, **kwargs):
             if metric == "GAUC":
                 result[metric] = gAUC(y_true, y_pred, group_index)
             elif metric == "NDCG":
-                pass
+                result[metric] = ndcg(y_true, y_pred, group_index)
             elif metric == "MRR":
                 result[metric] = mrr(y_true, y_pred, group_index)
+            elif metric == "Recall":
+                result[metric] = recall(y_true, y_pred, group_index)
             else:
                 raise NotImplementedError
     logging.info('[Metrics] ' + ' - '.join('{}: {:.6f}'.format(k, v) for k, v in result.items()))
@@ -47,21 +67,34 @@ def evaluate_metrics(y_true, y_pred, metrics, **kwargs):
 
 
 def gAUC(y_true, y_pred, group_index):
-    unique_groups = set(group_index)
+    begin = 0
+    end = 0
+    count = 0
     res = 0.0
-    for unique_group in tqdm(unique_groups):
-        res += roc_auc_score(y_true[group_index == unique_group], y_pred[group_index == unique_group])
-    return res/len(unique_groups)
+    while begin<len(group_index):
+        while end<len(group_index) and group_index[end]==group_index[begin]:
+            end+= 1
+        res += roc_auc_score(y_true[begin:end], y_pred[begin:end])
+        count += 1
+        begin = end
+    return res/count
 
 
 def mrr(y_true, y_pred, group_index):
-    unique_groups = set(group_index)
+    begin = 0
+    end = 0
+    count = 0
     res = 0.0
-    for unique_group in unique_groups:
-        res += group_mrr(y_true[group_index == unique_group], y_pred[group_index == unique_group])
-    return res / len(unique_groups)
+    while begin<len(group_index):
+        while end<len(group_index) and group_index[end]==group_index[begin]:
+            end+= 1
+        res += group_mrr(y_true[begin:end], y_pred[begin:end])
+        count += 1
+        begin = end
+    return res/count
 
 
 def group_mrr(y_true, y_pred):
     rank = len(y_true)-(y_true[y_pred.argsort()].argmax())
     return 1/rank
+

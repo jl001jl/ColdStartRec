@@ -9,7 +9,7 @@ base:
   loss: binary_crossentropy
   learning_rate: 0.001
   gpu: 0
-  patience: 3
+  patience: 2
   test_batch_size: 10240
   need_training: true
 
@@ -23,6 +23,7 @@ ContextRec:
 DIN:
   batch_size: 512
   test_batch_size: 2048
+  learning_rate: 0.00001
 
 DIERM:
   learning_rate: 0.0001

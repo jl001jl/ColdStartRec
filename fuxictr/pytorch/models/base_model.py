@@ -24,7 +24,7 @@ import numpy as np
 import torch
 import os, sys
 import logging
-from ...metrics import evaluate_metrics
+from ebsnrec.metrics import evaluate_metrics
 from ..torch_utils import get_device, get_optimizer, get_loss_fn, get_regularizer
 from ...utils import Monitor
 
@@ -237,9 +237,9 @@ class BaseModel(nn.Module):
                 y_pred.extend(return_dict["y_pred"].data.cpu().numpy().reshape(-1))
                 y_true.extend(batch_data[1][:,self._spec_cols["label_col"]["idx"]].data.cpu().numpy().reshape(-1))
                 if self._stop_training and "group_col" in self._spec_cols :
-                    group.extend(batch_data[1][:,self._spec_cols["group_col"]["idx"]].data.cpu().numpy().reshape(-1))
+                    group.extend(batch_data[1][:,self._spec_cols["group_col"]["idx"]].data.cpu().numpy().astype(int).reshape(-1))
                 if self._stop_training and "sequence_col" in self._spec_cols:
-                    sequence.extend(batch_data[1][:,self._spec_cols["sequence_col"]["idx"]].data.cpu().numpy().reshape(-1))
+                    sequence.extend(batch_data[1][:,self._spec_cols["sequence_col"]["idx"]].data.cpu().numpy().astype(int).reshape(-1))
             y_pred = np.array(y_pred, np.float64)
             y_true = np.array(y_true, np.float64)
             if self._stop_training:
